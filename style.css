@@ -1,0 +1,52 @@
+
+.content {
+  width: 960px;
+  margin: 0 auto;
+  padding: 30px;
+  font-family: Helvetica, Arial, serif;
+}
+
+header {
+  position: relative;
+  padding: 6px 12px;
+  height: 36px;
+  background-color: rgb(96, 181, 204);
+  text-align: center;
+}
+
+h1 {
+  color: white;
+  font-weight: normal;
+  margin: 0;
+}
+
+a {
+  color: rgb(96, 181, 204);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+input {
+  font-size: 25px;
+  input:
+}
+
+.error {
+  background-color: #FF9632;
+  padding: 20px;
+  box-sizing: border-box;
+  overflow-x: auto;
+  font-family: monospace;
+  font-size: 18px;
+}
+
+.emoji {
+  font-size: 55px;
+}
+
+.tagline {
+  margin-top: 35px
+}
