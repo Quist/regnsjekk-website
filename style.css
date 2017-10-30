@@ -23,6 +23,7 @@ h1 {
 a {
   color: rgb(96, 181, 204);
   text-decoration: none;
+  cursor: pointer;
 }
 
 a:hover {
@@ -31,7 +32,8 @@ a:hover {
 
 input {
   font-size: 25px;
-  input:
+  width: -webkit-fill-available;
+  padding: 7px 15px 7px 15px;
 }
 
 .error {
@@ -45,8 +47,39 @@ input {
 
 .emoji {
   font-size: 55px;
+  margin-top: 0px;
 }
 
 .tagline {
-  margin-top: 35px
+  margin-top: 35px;
+  text-align: center;
+  height: 250px;
+}
+
+.main-content {
+  margin-left: 25%;
+  margin-right: 25%;
+}
+
+.feilmelding {
+  margin-top: 25px;
+  background-color: #FF9632;
+  padding: 20px;
+  box-sizing: border-box;
+  overflow-x: auto;
+  font-family: monospace;
+  font-size: 18px;
+}
+
+.lesMerTekst {
+  text-align: left;
+}
+
+.tagline-tekst {
+  height: 120px;
+}
+
+.stage-info {
+  float: right;
+  margin-bottom: 5px;
 }
