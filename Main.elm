@@ -5,7 +5,7 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (keyCode, on, onClick, onInput)
 import Http
 import Json.Decode as Decode exposing (..)
-import Json.Encode as Encode exposing (..)
+import Json.Encode exposing (Value, bool, encode, float, int, list, object, string)
 
 
 main =
@@ -75,13 +75,19 @@ decodeGifUrl =
     Decode.at [ "data", "image_url" ] Decode.string
 
 
+encodeEmail : String -> Json.Encode.Value
+encodeEmail email =
+    Json.Encode.object [ ( "email", Json.Encode.string email ) ]
+
+
+postEmailToServer : String -> Cmd Msg
 postEmailToServer email =
     let
         url =
-            "http://quister.org/regnsjekk/api/varsler"
+            "https://ebrec20i63.execute-api.eu-central-1.amazonaws.com/prod/regnsjekk-users-service/users"
 
         request =
-            Http.post url (Http.jsonBody (Encode.string email)) decodeGifUrl
+            Http.post url (Http.jsonBody (encodeEmail email)) decodeGifUrl
     in
     Http.send ServerRespons request
 
