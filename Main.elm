@@ -1,11 +1,13 @@
 module Main exposing (..)
 
+import Dom exposing (focus)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (keyCode, on, onClick, onInput)
 import Http
 import Json.Decode as Decode exposing (..)
 import Json.Encode exposing (Value, bool, encode, float, int, list, object, string)
+import Task
 
 
 main =
@@ -19,6 +21,10 @@ main =
 
 
 -- Model
+
+
+stedInputHtmlId =
+    "sted-input"
 
 
 type alias UserInput =
@@ -48,6 +54,8 @@ type Msg
     = ServerRespons (Result Http.Error String)
     | LesMerToggle
     | UserInputEvent UserInputEvent
+    | FocusOn String
+    | FocusResult (Result Dom.Error ())
 
 
 type UserInputEvent
@@ -98,6 +106,12 @@ update msg model =
         LesMerToggle ->
             ( { model | lesMer = toggle model.lesMer }, Cmd.none )
 
+        FocusOn id ->
+            ( model, Cmd.batch [ Task.attempt FocusResult (focus id) ] )
+
+        FocusResult result ->
+            ( model, Cmd.none )
+
         UserInputEvent userInputEvent ->
             updateUserInputEvent userInputEvent model
 
@@ -127,7 +141,7 @@ updateUserInputEvent userInputEvent model =
 
         EmailInputKeyPress key ->
             if isEnter key then
-                ( { model | stage = Sted }, Cmd.none )
+                ( { model | stage = Sted }, Cmd.batch [ Task.attempt FocusResult (focus stedInputHtmlId) ] )
             else
                 ( { model | feilmelding = "" }, Cmd.none )
 
@@ -188,7 +202,8 @@ viewInput model =
                 [ span [] [ i [] [ text "Hvor vil du har varsler for?" ] ]
                 , span [ class "stage-info" ] [ i [] [ text "2/2" ] ]
                 , input
-                    [ placeholder "Oslo"
+                    [ id stedInputHtmlId
+                    , placeholder "Oslo"
                     , Html.Attributes.value model.userInput.sted
                     , onInput (UserInputEvent << StedInputChange)
                     , onKeyDown (UserInputEvent << StedInputKeyPress)
