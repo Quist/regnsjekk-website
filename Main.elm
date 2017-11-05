@@ -8,6 +8,7 @@ import Http
 import Json.Decode as Decode exposing (..)
 import Json.Encode exposing (Value, bool, encode, float, int, list, object, string)
 import Spinner exposing (defaultConfig)
+import String exposing (contains)
 import Task
 
 
@@ -156,7 +157,10 @@ updateUserInputEvent userInputEvent model =
 
         EmailInputKeyPress key ->
             if isEnter key then
-                ( { model | stage = Sted }, Cmd.batch [ Task.attempt FocusResult (focus stedInputHtmlId) ] )
+                if isValidEmail model.userInput.email then
+                    ( { model | stage = Sted }, Cmd.batch [ Task.attempt FocusResult (focus stedInputHtmlId) ] )
+                else
+                    ( { model | feilmelding = "Invalid email" }, Cmd.none )
             else
                 ( { model | feilmelding = "" }, Cmd.none )
 
@@ -172,6 +176,11 @@ toggle verdi =
 onKeyDown : (Int -> msg) -> Attribute msg
 onKeyDown tagger =
     on "keydown" (Decode.map tagger keyCode)
+
+
+isValidEmail : String -> Bool
+isValidEmail email =
+    contains "@" email
 
 
 
