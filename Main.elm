@@ -17,7 +17,7 @@ main =
         { view = view
         , update = update
         , subscriptions = \model -> Sub.map SpinnerMsg Spinner.subscription
-        , init = ( initialModel, Cmd.none )
+        , init = ( initialModel, Cmd.batch [ Task.attempt FocusResult (focus emailInputHtmlId) ] )
         }
 
 
@@ -27,6 +27,10 @@ main =
 
 stedInputHtmlId =
     "sted-input"
+
+
+emailInputHtmlId =
+    "email-input"
 
 
 type alias UserInput =
@@ -218,7 +222,8 @@ viewInput model =
     case model.stage of
         Email ->
             input
-                [ type_ "email"
+                [ id emailInputHtmlId
+                , type_ "email"
                 , onInput (UserInputEvent << EmailInputChange)
                 , onKeyDown (UserInputEvent << EmailInputKeyPress)
                 , placeholder "you@mail.com"
