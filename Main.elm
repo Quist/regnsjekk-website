@@ -59,6 +59,7 @@ initialModel =
 type Msg
     = ServerRespons (Result Http.Error String)
     | LesMerToggle
+    | Reset
     | UserInputEvent UserInputEvent
     | SpinnerMsg Spinner.Msg
     | FocusOn String
@@ -123,6 +124,9 @@ update msg model =
 
         UserInputEvent userInputEvent ->
             updateUserInputEvent userInputEvent model
+
+        Reset ->
+            ( initialModel, Cmd.none )
 
         SpinnerMsg msg ->
             let
@@ -190,7 +194,7 @@ isValidEmail email =
 view : Model -> Html Msg
 view model =
     div [ class "content" ]
-        [ header [] [ h1 [] [ text "Sykle til jobben?" ] ]
+        [ header [] [ h1 [] [ a [ onClick Reset ] [ text "Sykle til jobben?" ] ] ]
         , div [ class "main-content" ]
             [ div [ class "tagline" ]
                 [ div [ class "tagline-tekst" ]
