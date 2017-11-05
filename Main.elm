@@ -7,6 +7,7 @@ import Html.Events exposing (keyCode, on, onClick, onInput)
 import Http
 import Json.Decode as Decode exposing (..)
 import Json.Encode exposing (Value, bool, encode, float, int, list, object, string)
+import Spinner exposing (defaultConfig)
 import Task
 
 
@@ -14,7 +15,7 @@ main =
     Html.program
         { view = view
         , update = update
-        , subscriptions = \_ -> Sub.none
+        , subscriptions = \model -> Sub.map SpinnerMsg Spinner.subscription
         , init = ( initialModel, Cmd.none )
         }
 
@@ -35,18 +36,22 @@ type alias UserInput =
 
 type alias Model =
     { feilmelding : String
+    , feedback : String
     , lesMer : Bool
     , stage : Stage
     , userInput : UserInput
+    , spinner : Spinner.Model
     }
 
 
 initialModel : Model
 initialModel =
     { feilmelding = ""
+    , feedback = ""
     , lesMer = False
     , stage = Email
     , userInput = UserInput "" ""
+    , spinner = Spinner.init
     }
 
 
@@ -54,6 +59,7 @@ type Msg
     = ServerRespons (Result Http.Error String)
     | LesMerToggle
     | UserInputEvent UserInputEvent
+    | SpinnerMsg Spinner.Msg
     | FocusOn String
     | FocusResult (Result Dom.Error ())
 
@@ -68,6 +74,8 @@ type UserInputEvent
 type Stage
     = Email
     | Sted
+    | WaitingForServerResponse
+    | SuccessfulSubmit
 
 
 
@@ -78,9 +86,9 @@ isEnter key =
     key == 13
 
 
-decodeGifUrl : Decode.Decoder String
-decodeGifUrl =
-    Decode.at [ "data", "image_url" ] Decode.string
+decodeServerResponse : Decode.Decoder String
+decodeServerResponse =
+    Decode.at [ "message" ] Decode.string
 
 
 encodeEmail : String -> Json.Encode.Value
@@ -95,7 +103,7 @@ postEmailToServer email =
             "https://ebrec20i63.execute-api.eu-central-1.amazonaws.com/prod/regnsjekk-users-service/users"
 
         request =
-            Http.post url (Http.jsonBody (encodeEmail email)) decodeGifUrl
+            Http.post url (Http.jsonBody (encodeEmail email)) decodeServerResponse
     in
     Http.send ServerRespons request
 
@@ -115,10 +123,17 @@ update msg model =
         UserInputEvent userInputEvent ->
             updateUserInputEvent userInputEvent model
 
+        SpinnerMsg msg ->
+            let
+                spinnerModel =
+                    Spinner.update msg model.spinner
+            in
+            { model | spinner = spinnerModel } ! []
+
         ServerRespons response ->
             case response of
                 Ok result ->
-                    ( { model | stage = Sted }, Cmd.none )
+                    ( { model | feedback = "Flott! Du er påmeldt 💪", stage = SuccessfulSubmit }, Cmd.none )
 
                 Err err ->
                     ( { model | feilmelding = toString err }, Cmd.none )
@@ -132,7 +147,7 @@ updateUserInputEvent userInputEvent model =
 
         StedInputKeyPress key ->
             if isEnter key then
-                ( model, postEmailToServer model.userInput.email )
+                ( { model | stage = WaitingForServerResponse }, Cmd.batch [ postEmailToServer model.userInput.email ] )
             else
                 ( { model | feilmelding = "" }, Cmd.none )
 
@@ -179,6 +194,7 @@ view model =
             , div []
                 [ viewInput model
                 , viewFeilmelding model.feilmelding
+                , viewFeedback model.feedback
                 ]
             ]
         ]
@@ -211,6 +227,16 @@ viewInput model =
                     []
                 ]
 
+        WaitingForServerResponse ->
+            let
+                config =
+                    { defaultConfig | scale = 0.75 }
+            in
+            div [] [ Spinner.view config model.spinner ]
+
+        SuccessfulSubmit ->
+            text ""
+
 
 viewLesMerTekst : Model -> String
 viewLesMerTekst model =
@@ -233,4 +259,12 @@ viewFeilmelding feilmelding =
     if feilmelding == "" then
         text " "
     else
-        div [ class "feilmelding" ] [ text feilmelding ]
+        div [ class "feilmelding infoboks" ] [ text feilmelding ]
+
+
+viewFeedback : String -> Html msg
+viewFeedback feedback =
+    if feedback == "" then
+        text " "
+    else
+        div [ class "feedback infoboks" ] [ text feedback ]
