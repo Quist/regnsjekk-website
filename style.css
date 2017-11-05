@@ -1,9 +1,11 @@
+.body {
+  font-family: monospace;
+}
 
 .content {
   width: 960px;
   margin: 0 auto;
   padding: 30px;
-  font-family: Helvetica, Arial, serif;
 }
 
 header {
@@ -16,7 +18,7 @@ header {
 
 h1 {
   color: white;
-  font-weight: normal;
+  font-weight: 200;
   margin: 0;
 }
 
@@ -24,6 +26,7 @@ a {
   color: rgb(96, 181, 204);
   text-decoration: none;
   cursor: pointer;
+  font-family: monospace;
 }
 
 a:hover {
@@ -61,22 +64,32 @@ input {
   margin-right: 25%;
 }
 
-.feilmelding {
+.infoboks {
   margin-top: 25px;
-  background-color: #FF9632;
   padding: 20px;
   box-sizing: border-box;
   overflow-x: auto;
   font-family: monospace;
-  font-size: 18px;
+  font-size: 16px;
+}
+
+.feilmelding {
+  background-color: #FF9632;
+}
+
+.feedback {
+
 }
 
 .lesMerTekst {
   text-align: left;
+  font-family: monospace;
+  font-size: 16px;
 }
 
 .tagline-tekst {
-  height: 120px;
+  height: 150px;
+  font-size: 18px;
 }
 
 .stage-info {
