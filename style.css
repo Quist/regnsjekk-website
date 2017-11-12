@@ -18,6 +18,7 @@ header {
 
 header a {
   color: white;
+  font-size: 30px;
 }
 
 h1 {
@@ -31,6 +32,7 @@ a {
   cursor: pointer;
   font-family: monospace;
   color: rgb(96, 181, 204);
+  font-size: 16px;
 }
 
 a:hover {
@@ -63,9 +65,17 @@ input {
   text-align: center;
 }
 
-.main-content {
-  margin-left: 25%;
-  margin-right: 25%;
+@media (min-width:641px)  {
+  .main-content {
+    margin-left: 25%;
+    margin-right: 25%;
+  }
+}
+
+@media (max-width:642px)  {
+  .main-content {
+
+  }
 }
 
 .infoboks {
