@@ -3,7 +3,7 @@
 }
 
 .content {
-  width: 960px;
+  max-width: 960px;
   margin: 0 auto;
   padding: 30px;
 }
@@ -16,6 +16,10 @@ header {
   text-align: center;
 }
 
+header a {
+  color: white;
+}
+
 h1 {
   color: white;
   font-weight: 200;
@@ -23,9 +27,10 @@ h1 {
 }
 
 a {
-  text-decoration: none;
+  text-decoration: blue;
   cursor: pointer;
   font-family: monospace;
+  color: rgb(96, 181, 204);
 }
 
 a:hover {
@@ -36,6 +41,7 @@ input {
   font-size: 25px;
   width: -webkit-fill-available;
   padding: 7px 15px 7px 15px;
+  margin-bottom: 25px;
 }
 
 .error {
@@ -55,7 +61,6 @@ input {
 .tagline {
   margin-top: 35px;
   text-align: center;
-  height: 250px;
 }
 
 .main-content {
@@ -76,18 +81,14 @@ input {
   background-color: #FF9632;
 }
 
-.feedback {
-
-}
-
 .lesMerTekst {
   text-align: left;
   font-family: monospace;
   font-size: 16px;
+  margin-top: 10px;
 }
 
 .tagline-tekst {
-  height: 150px;
   font-size: 18px;
   font-family: monospace;
 }

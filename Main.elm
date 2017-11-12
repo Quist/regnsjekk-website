@@ -111,7 +111,7 @@ postEmailToServer email =
         request =
             Http.post url (Http.jsonBody (encodeEmail email)) decodeServerResponse
     in
-    Http.send ServerRespons request
+        Http.send ServerRespons request
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -137,7 +137,7 @@ update msg model =
                 spinnerModel =
                     Spinner.update msg model.spinner
             in
-            { model | spinner = spinnerModel } ! []
+                { model | spinner = spinnerModel } ! []
 
         ServerRespons response ->
             case response of
@@ -202,9 +202,7 @@ view model =
         , div [ class "main-content" ]
             [ div [ class "tagline" ]
                 [ div [ class "tagline-tekst" ]
-                    [ p [] [ i [] [ text "Få daglig regnvarsel!" ] ]
-                    , a [ class "lesMerLenke", onClick LesMerToggle ] [ text (viewLesMerTekst model) ]
-                    , viewLesMer model
+                    [ p [] [ i [] [ text "Få regnvarsel hver morgen!" ] ]
                     ]
                 , p [ class "emoji" ] [ text "☔️" ]
                 ]
@@ -212,6 +210,8 @@ view model =
                 [ viewInput model
                 , viewFeilmelding model.feilmelding
                 , viewFeedback model.feedback
+                , a [ class "lesMerLenke", onClick LesMerToggle ] [ text (viewLesMerTekst model) ]
+                , viewLesMer model
                 ]
             ]
         ]
@@ -250,7 +250,7 @@ viewInput model =
                 config =
                     { defaultConfig | scale = 0.75 }
             in
-            div [] [ Spinner.view config model.spinner ]
+                div [] [ Spinner.view config model.spinner ]
 
         SuccessfulSubmit ->
             text ""
