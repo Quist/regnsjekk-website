@@ -102,6 +102,25 @@ encodeEmail email =
     Json.Encode.object [ ( "email", Json.Encode.string email ) ]
 
 
+parseError : Http.Error -> String
+parseError err =
+    case err of
+        Http.BadStatus err ->
+            err.body
+
+        Http.Timeout ->
+            toString err
+
+        Http.BadUrl _ ->
+            toString err
+
+        Http.NetworkError ->
+            toString err
+
+        Http.BadPayload _ _ ->
+            toString err
+
+
 postEmailToServer : String -> Cmd Msg
 postEmailToServer email =
     let
@@ -145,7 +164,7 @@ update msg model =
                     ( { model | feedback = "Flott! Du er påmeldt 💪", stage = SuccessfulSubmit }, Cmd.none )
 
                 Err err ->
-                    ( { model | feilmelding = toString err }, Cmd.none )
+                    ( { model | feilmelding = parseError err, stage = Email }, Cmd.none )
 
 
 updateUserInputEvent : UserInputEvent -> Model -> ( Model, Cmd Msg )
